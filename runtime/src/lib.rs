@@ -6,6 +6,9 @@
 #[cfg(feature = "std")]
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
+mod chain_extension;
+use crate::chain_extension::FetchRandomExtension;
+
 use codec::Encode;
 use pallet_grandpa::{
     fg_primitives, AuthorityId as GrandpaId, AuthorityList as GrandpaAuthorityList,
@@ -185,7 +188,7 @@ impl pallet_contracts::Config for Runtime {
     type CallFilter = frame_support::traits::Nothing;
     type WeightPrice = pallet_transaction_payment::Pallet<Self>;
     type WeightInfo = pallet_contracts::weights::SubstrateWeight<Self>;
-    type ChainExtension = ();
+    //type ChainExtension = ();
     type Schedule = Schedule;
     type CallStack = [pallet_contracts::Frame<Self>; 31];
     type DeletionQueueDepth = DeletionQueueDepth;
@@ -197,6 +200,9 @@ impl pallet_contracts::Config for Runtime {
     type MaxCodeLen = ConstU32<{ 256 * 1024 }>;
     type RelaxedMaxCodeLen = ConstU32<{ 512 * 1024 }>;
     type MaxStorageKeyLen = ConstU32<{ 512 * 1024 }>;
+
+	/// 引用智能合约调用pallet
+	type ChainExtension = FetchRandomExtension;
 }
 /*** End added block ***/
 
